@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 3 — Методы</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Урок 3 · ~10 минут</p>
+<h1>Методы: вход, действие, выход</h1>
+<p class="subtitle">Навык: посмотреть на сигнатуру метода и сразу ответить — что принимает, что делает, что возвращает.</p>
+
+<h2>Сигнатура читается как предложение</h2>
+<pre><code><b>public</b>  <b>bool</b>        <b>IsVisible</b>(<b>string</b> selector)
+   │        │            │            └ вход: параметр
+   │        │            └ имя метода
+   │        └ выход: тип результата
+   └ кто может вызвать</code></pre>
+
+<p>Четыре вопроса к любой сигнатуре: <b>что принимает</b> (в скобках),
+<b>что возвращает</b> (тип перед именем), <b>как зовут</b> (подсказывает, что делает),
+<b>кто видит</b> (public/private).</p>
+
+<h2>Вход: параметры</h2>
+<pre><code>_driver.Type(LoginField, login);   <i>// два аргумента — куда писать, что писать</i>
+
+// объявление:
+public void Type(string selector, string text)</code></pre>
+
+<p>Аргументы идут строго по порядку параметров. Но бывают <b>именованные</b> —
+с именем и двоеточием, тогда порядок не важен:</p>
+<pre><code>WaitForElement(timeout: 5000, selector: "#btn");</code></pre>
+<p>В тестовом коде такое сплошь и рядом — так ИИ пишет читаемые вызовы.</p>
+
+<h2>Выход: return и void</h2>
+<pre><code>public <b>void</b> Type(...)      <i>// void — «делаю, но ничего не отдаю»</i>
+public <b>bool</b> IsVisible(...) <i>// отдаёт true/false</i>
+public <b>LoginPage</b> Open()    <i>// отдаёт объект страницы (помнишь return this?)</i></code></pre>
+
+<p><code>return</code> — то, что метод отдаёт обратно. После <code>return</code> метод завершается —
+всё ниже не выполнится.</p>
+
+<h2>Короткая форма: =></h2>
+<pre><code>public bool IsVisible(string s) <b>=></b> _visibleElements.Contains(s);
+
+// то же самое длинно:
+public bool IsVisible(string s) { <b>return</b> _visibleElements.Contains(s); }</code></pre>
+<p><code>=></code> у метода = «метод из одной строки, верни выражение справа».</p>
+
+<h2>Практика (3 минуты)</h2>
+<p>Открой <code>FakeDriver.cs</code> и для каждого метода ответь на 4 вопроса
+(вход / выход / имя / видимость):</p>
+<ol>
+    <li><code>GoTo</code></li>
+    <li><code>IsVisible</code></li>
+    <li><code>GetText</code></li>
+</ol>
+<details>
+    <summary>Показать ответы</summary>
+    <ol>
+        <li>Вход: строка url · Выход: void · Имя: «перейти по адресу» · public</li>
+        <li>Вход: селектор · Выход: bool (виден ли элемент) · public</li>
+        <li>Вход: селектор · Выход: <code>string?</code> — строка или null, если поля нет · public</li>
+    </ol>
+</details>
+
+<h2>Проверь себя</h2>
+<div class="quiz">
+
+    <div class="quiz-q">
+        <p class="q-text"><code>public void Click(string selector)</code> — что возвращает метод?</p>
+        <ul>
+            <li data-ok="true">ничего — <code>void</code> значит «без результата»</li>
+            <li data-ok="false">строку <code>selector</code>, которую принял на вход</li>
+            <li data-ok="false">результат клика — <code>true</code> или <code>false</code></li>
+        </ul>
+        <p class="feedback" data-good="Да. void = метод только делает, не отдаёт." data-bad="Тип возврата стоит перед именем — это void. selector — вход, не выход."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>page.EnterPassword("qwerty123")</code> — что такое <code>"qwerty123"</code>?</p>
+        <ul>
+            <li data-ok="false">параметр метода</li>
+            <li data-ok="true">аргумент вызова</li>
+            <li data-ok="false">возвращаемое значение</li>
+        </ul>
+        <p class="feedback" data-good="Верно. Параметр — в объявлении метода, аргумент — в вызове." data-bad="Тонкость терминов: параметр — «слот» в объявлении, аргумент — конкретное значение при вызове. В разговоре путают — и ничего страшного."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Что делает <code>return</code> внутри метода?</p>
+        <ul>
+            <li data-ok="false">печатает результат в консоль</li>
+            <li data-ok="true">отдаёт значение и завершает метод</li>
+            <li data-ok="false">сохраняет значение в поле класса</li>
+        </ul>
+        <p class="feedback" data-good="Да: return — выход из метода с результатом." data-bad="return — не печать и не сохранение. Это «отдать обратно вызвавшему и выйти»."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>public bool IsOnDashboard() => _driver.CurrentUrl == "/dashboard";</code> — эквивалентно чему?</p>
+        <ul>
+            <li data-ok="false"><code>{ _driver.CurrentUrl = "/dashboard"; }</code></li>
+            <li data-ok="true"><code>{ return _driver.CurrentUrl == "/dashboard"; }</code></li>
+            <li data-ok="false"><code>{ if (..) return true; else return false; }</code></li>
+        </ul>
+        <p class="feedback" data-good="Да. => — короткая запись return одного выражения." data-bad="=> — короткий return выражения. Вариант 1 присваивает (=, не ==), вариант 3 длиннее, но по смыслу близок — официально => это именно return выражения."></p>
+    </div>
+
+</div>
+
+<div class="win">
+    <p class="label">Твой выигрыш</p>
+    <p>Любой вызов в тесте — <code>page.Submit()</code>, <code>Assert.Equal(x, y)</code>,
+    <code>driver.FindElement(...)</code> — теперь раскладывается на
+    «кому посылаем → что передаём → что получаем».</p>
+</div>
+
+<p>Живой пример: <code>cd LearningCSharp</code>, <code>dotnet run</code>, урок 3.
+Первоисточник: <a href="https://metanit.com/sharp/tutorial/">Metanit — руководство по C#</a>, раздел «Методы».</p>
+
+<nav class="lesson-nav">
+    <a href="0002-peremennye-i-tipy.html">← Урок 2. Переменные и типы</a>
+    <a href="0004-klassy-i-obekty.html">Урок 4. Классы и объекты →</a>
+</nav>
+
+<div class="teacher-note">
+    Непонятно? Спроси Devin: «покажи, где в LoginPage.cs вход и выход у каждого
+    метода» или «зачем Open() возвращает LoginPage».
+</div>
+
+</main>
+</body>
+</html>

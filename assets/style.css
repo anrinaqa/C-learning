@@ -1,0 +1,310 @@
+/* Общий стиль всех уроков и шпаргалок. Чистая типографика, дружит с печатью. */
+
+:root {
+    --ink: #1f2430;
+    --muted: #6b7280;
+    --accent: #7c3aed;
+    --accent-soft: #ede9fe;
+    --ok: #15803d;
+    --ok-soft: #dcfce7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --paper: #fdfdfc;
+    --code-bg: #f4f3f0;
+    --line: #e5e4e0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.65;
+    font-size: 16.5px;
+}
+
+main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+}
+
+.lesson-meta {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+}
+
+h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 0.5rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin: 2.5rem 0 0.75rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.35rem;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-top: 0;
+}
+
+code {
+    font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    padding: 0.15em 0.35em;
+    border-radius: 4px;
+}
+
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    line-height: 1.5;
+}
+
+pre code { background: none; padding: 0; font-size: 0.88rem; }
+
+.win {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.25rem;
+    margin: 1.5rem 0;
+}
+
+.win p:first-child { margin-top: 0; }
+.win p:last-child { margin-bottom: 0; }
+.win .label {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+details {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.75rem 1.1rem;
+    margin: 1rem 0;
+    background: #fff;
+}
+
+details summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+details[open] summary { margin-bottom: 0.5rem; }
+
+/* ---------- квиз ---------- */
+
+.quiz {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    background: #fff;
+}
+
+.quiz h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.quiz .q-text { font-weight: 600; margin: 1rem 0 0.5rem; }
+
+.quiz ul { list-style: none; padding: 0; margin: 0; }
+
+.quiz li {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.55rem 0.8rem;
+    margin: 0.4rem 0;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.quiz li:hover { background: var(--code-bg); }
+
+.quiz li.correct {
+    background: var(--ok-soft);
+    border-color: var(--ok);
+}
+
+.quiz li.wrong {
+    background: var(--bad-soft);
+    border-color: var(--bad);
+}
+
+.quiz li.locked { cursor: default; }
+.quiz li.locked:hover { background: inherit; }
+.quiz li.correct.locked:hover { background: var(--ok-soft); }
+.quiz li.wrong.locked:hover { background: var(--bad-soft); }
+
+.quiz .feedback {
+    margin: 0.6rem 0 0;
+    font-size: 0.92rem;
+    color: var(--muted);
+    min-height: 1.2em;
+}
+
+.quiz .feedback.good { color: var(--ok); }
+.quiz .feedback.bad { color: var(--bad); }
+
+/* ---------- навигация ---------- */
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+}
+
+.lesson-nav a { color: var(--accent); text-decoration: none; }
+.lesson-nav a:hover { text-decoration: underline; }
+
+.teacher-note {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px dashed var(--accent);
+    font-size: 0.95rem;
+}
+
+table.ref {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    margin: 1rem 0;
+}
+
+table.ref th, table.ref td {
+    text-align: left;
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+}
+
+table.ref th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+
+/* ---------- оглавление курса ---------- */
+
+.toc-btn {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 20;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--ink);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.toc-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.toc-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: 29;
+}
+
+.toc-backdrop.open { display: block; }
+
+.toc-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background: #fff;
+    border-right: 1px solid var(--line);
+    padding: 1.75rem 1.5rem;
+    z-index: 30;
+    transform: translateX(-105%);
+    transition: transform 0.2s ease;
+    overflow-y: auto;
+}
+
+.toc-panel.open { transform: translateX(0); }
+
+.toc-panel h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border: none;
+    margin: 1.25rem 0 0.5rem;
+}
+
+.toc-panel h2:first-child { margin-top: 0; }
+
+.toc-panel ol, .toc-panel ul {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    font-size: 0.95rem;
+}
+
+.toc-panel li { margin: 0.15rem 0; }
+
+.toc-panel a {
+    display: block;
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.toc-panel a:hover { background: var(--accent-soft); color: var(--accent); }
+
+.toc-panel li.here {
+    padding: 0.35rem 0.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+}
+
+.toc-panel li.soon {
+    padding: 0.35rem 0.5rem;
+    color: var(--muted);
+}
+
+.toc-panel li.soon::after {
+    content: " · скоро";
+    font-size: 0.8rem;
+}
+
+@media print {
+    body { background: #fff; }
+    .lesson-nav, .teacher-note, .toc-btn, .toc-panel, .toc-backdrop { display: none; }
+    .quiz li { cursor: default; }
+}

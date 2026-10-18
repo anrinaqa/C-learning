@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 5 — Условия и логика</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Урок 5 · ~10 минут</p>
+<h1>Условия и логика</h1>
+<p class="subtitle">Навык: читать <code>if / else</code> ветвления и составные условия — «если элемент виден И код 200, то…»</p>
+
+<h2>Базовый if / else</h2>
+<pre><code>if (statusCode == 200)
+{
+    <i>// выполнится, когда условие true</i>
+}
+else if (statusCode == 404)
+{
+    <i>// иначе проверим это</i>
+}
+else
+{
+    <i>// всё остальное — «иначе»</i>
+}</code></pre>
+
+<p>В твоём <code>FakeDriver.cs</code> это уже есть — метод <code>Click</code>:</p>
+<pre><code>if (ok)
+    CurrentUrl = "/dashboard";     <i>// креды верные → дашборд</i>
+else
+    _visibleElements.Add(".error-message");   <i>// иначе → ошибка</i></code></pre>
+<p>Без фигурных скобок <code>if</code> берёт только <b>одну</b> следующую строку —
+работает, но на ревью лучше видеть скобки: меньше шанс ошибки.</p>
+
+<h2>Сравнения: == против =</h2>
+<table class="ref">
+<tr><th>Запись</th><th>Что делает</th></tr>
+<tr><td><code>x = 5</code></td><td>присвоить (положить 5 в x)</td></tr>
+<tr><td><code>x == 5</code></td><td>сравнить (x равен 5?)</td></tr>
+<tr><td><code>x != 5</code></td><td>x НЕ равен 5?</td></tr>
+<tr><td><code>&gt; &lt; &gt;= &lt;=</code></td><td>больше / меньше, для чисел</td></tr>
+</table>
+<p>Баг-классика: <code>if (x = 5)</code> — присваивание вместо сравнения. В C# компилятор
+обычно это не пропустит, но в `if (flag = true)` — пропустит, и условие станет всегда истинным.</p>
+
+<h2>Логические операторы</h2>
+<table class="ref">
+<tr><th>Запись</th><th>Читается</th><th>Когда true</th></tr>
+<tr><td><code>a &amp;&amp; b</code></td><td>«И»</td><td>оба условия истинны</td></tr>
+<tr><td><code>a || b</code></td><td>«ИЛИ»</td><td>хотя бы одно истинно</td></tr>
+<tr><td><code>!a</code></td><td>«НЕ»</td><td>a ложно</td></tr>
+</table>
+
+<pre><code>if (statusCode == 200 &amp;&amp; pageTitle == "Dashboard")   <i>// и то, и другое</i>
+if (statusCode == 500 || isErrorShown)               <i>// хоть один признак ошибки</i>
+if (!isErrorShown)                                   <i>// ошибок нет</i></code></pre>
+
+<p>Из твоего `Click`: <code>login == "admin" &amp;&amp; password == "pass123"</code> —
+оба поля должны совпасть, иначе ошибка. Как твои проверки в ТК: «и логин, и пароль верные».</p>
+
+<h2>Тернарный оператор — мини-if</h2>
+<pre><code>string result = statusCode == 200 <b>?</b> "PASS" <b>:</b> "FAIL";
+// читаем: условие ? значение-если-true : значение-если-false</code></pre>
+
+<h2>switch — много веток по одному значению</h2>
+<pre><code>switch (statusCode)
+{
+    case 200:  <i>// если 200</i>
+        return "OK";
+    case 404:
+        return "Not Found";
+    default:   <i>// всё остальное, как else</i>
+        return "Другое";
+}</code></pre>
+
+<h2>Практика (2 минуты)</h2>
+<p>В <code>FakeDriver.cs</code>, метод <code>Click</code> (строки 40–52):</p>
+<ol>
+    <li>Найди оба <code>if</code>. Какое условие у каждого?</li>
+    <li>Что должно случиться, чтобы выполнился <code>else</code> из строки 49?</li>
+    <li>Вырази условие на строке 44 словами-«И»/«ИЛИ».</li>
+</ol>
+<details><summary>Показать ответы</summary>
+<ol>
+    <li><code>if (selector == "#submit")</code> — кликнули именно кнопку отправки; <code>if (ok)</code> — креды верные</li>
+    <li>Когда <code>ok == false</code>: логин ≠ "admin" ИЛИ пароль ≠ "pass123" (или оба)</li>
+    <li>«логин равен admin И пароль равен pass123» — оператор <code>&amp;&amp;</code></li>
+</ol>
+</details>
+
+<h2>Проверь себя</h2>
+<div class="quiz">
+
+    <div class="quiz-q">
+        <p class="q-text"><code>if (statusCode = 200)</code> — что не так?</p>
+        <ul>
+            <li data-ok="false">всё верно — так и проверяют равенство</li>
+            <li data-ok="true">один <code>=</code> это присваивание; сравнение — <code>==</code></li>
+            <li data-ok="false">нельзя сравнивать переменную с числом 200</li>
+        </ul>
+        <p class="feedback" data-good="Да — это баг-классика: условие не проверяет, а затирает значение." data-bad="Один = присваивает, два == сравнивают. В условии почти всегда нужно ==."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>if (code == 200 &amp;&amp; title == "Home")</code> — когда сработает?</p>
+        <ul>
+            <li data-ok="true">только когда И код 200, И заголовок "Home"</li>
+            <li data-ok="false">когда код 200 ИЛИ заголовок равен "Home"</li>
+            <li data-ok="false">когда код не 200 И заголовок не "Home"</li>
+        </ul>
+        <p class="feedback" data-good="Верно: && требует обеих частей." data-bad="&& — это И: нужны оба условия сразу. ИЛИ — это ||."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>if (!isErrorShown)</code> — что проверяет?</p>
+        <ul>
+            <li data-ok="false">что ошибка показана на странице</li>
+            <li data-ok="true">что ошибка НЕ показана</li>
+            <li data-ok="false">что переменной isErrorShown не существует</li>
+        </ul>
+        <p class="feedback" data-good="Да: ! переворачивает — «если НЕ показана»." data-bad="! — это НЕ. Условие истинно, когда isErrorShown == false. Переменная при этом существует."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>var r = ok ? "PASS" : "FAIL";</code> — что будет в <code>r</code>, если <code>ok == false</code>?</p>
+        <ul>
+            <li data-ok="false">"PASS"</li>
+            <li data-ok="true">"FAIL"</li>
+            <li data-ok="false">ошибка компиляции</li>
+        </ul>
+        <p class="feedback" data-good="Верно: условие ложно → берётся часть после двоеточия." data-bad="Тернарный: условие ? если-true : если-false. ok==false → ветка после ':'."></p>
+    </div>
+
+</div>
+
+<div class="win">
+    <p class="label">Твой выигрыш</p>
+    <p>Условия — мостик к проверкам. <code>Assert.True(x == y)</code> — это тот же
+    <code>if</code>, упакованный в тест: «если условие ложно — тест красный».</p>
+</div>
+
+<p>Живой пример: <code>cd LearningCSharp</code>, <code>dotnet run</code>, урок 5.
+Первоисточник: <a href="https://metanit.com/sharp/tutorial/">Metanit</a>, раздел «Условные конструкции».</p>
+
+<nav class="lesson-nav">
+    <a href="0004-klassy-i-obekty.html">← Урок 4. Классы и объекты</a>
+    <a href="0006-kollekcii-i-cikly.html">Урок 6. Коллекции и циклы →</a>
+</nav>
+
+<div class="teacher-note">
+    Непонятно? Спроси Devin: «покажи if/else из реального Selenium-кода» или
+    «разбери условие в Click по шагам».
+</div>
+
+</main>
+</body>
+</html>

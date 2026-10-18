@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 4 — Классы и объекты</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Урок 4 · ~15 минут · ключевой урок курса</p>
+<h1>Классы и объекты</h1>
+<p class="subtitle">Навык: отличить чертёж (класс) от экземпляра (объект) и видеть, из чего класс состоит.</p>
+
+<h2>Класс = бланк, объект = заполненный бланк</h2>
+<p>Из твоего мира: <b>класс — это шаблон тест-кейса</b> в TMS. Сам по себе он ничего не делает —
+это форма с полями. <b>Объект — конкретный тест, созданный по шаблону</b>: заполнены поля,
+у него своё состояние.</p>
+
+<pre><code><b>class</b> TestUser { ... }              <i>// класс — шаблон</i>
+
+<b>var</b> u1 = <b>new</b> TestUser("admin", "x"); <i>// объект 1 — экземпляр по шаблону</i>
+<b>var</b> u2 = <b>new</b> TestUser("guest", "y"); <i>// объект 2 — другой экземпляр, свои данные</i></code></pre>
+
+<p><code>new</code> — команда «создай объект по этому чертежу». У <code>u1</code> и <code>u2</code>
+одинаковое устройство (один класс), но разные данные (свои поля).</p>
+
+<h2>Из чего состоит класс</h2>
+<p>Открой <code>LoginPage.cs</code> — вот его скелет без кода:</p>
+
+<pre><code>public class LoginPage
+{
+    <b>поля</b>        private readonly FakeDriver _driver;   <i>// внутренняя память объекта</i>
+    <b>константы</b>   private const string LoginField = "#login";
+
+    <b>конструктор</b> public LoginPage(FakeDriver driver)    <i>// отрабатывает при new</i>
+
+    <b>методы</b>      public LoginPage Open() { ... }        <i>// что объект умеет делать</i>
+                  public bool IsOnDashboard() => ...
+}</code></pre>
+
+<p>Три разновидности «переменных в классе» — теперь различаем их точно:</p>
+
+<table class="ref">
+<tr><th></th><th>Как узнать</th><th>Зачем</th><th>Пример</th></tr>
+<tr><td><b>поле</b></td><td>строка внутри класса, но вне методов, без <code>get</code></td><td>внутренняя память объекта: методы пишут и читают её между собой</td><td><code>_driver</code></td></tr>
+<tr><td><b>свойство</b></td><td>у него есть <code>{ get; }</code> или <code>{ get; set; }</code></td><td>данные объекта, доступные снаружи: <code>user.Login</code></td><td><code>CurrentUrl</code></td></tr>
+<tr><td><b>локальная переменная</b></td><td>объявлена внутри <code>{ }</code> метода</td><td>временная — умирает, когда метод закончился</td><td><code>bool ok</code> в <code>Click()</code></td></tr>
+</table>
+
+<h2>Конструктор — «инструкция по сборке»</h2>
+<pre><code>public LoginPage(<b>FakeDriver driver</b>)   <i>// имя = имя класса, возвращаемого типа нет</i>
+{
+    _driver = driver;                     <i>// положили присланный драйвер в поле</i>
+}</code></pre>
+
+<p>Признак конструктора: имя совпадает с именем класса и у него нет типа возврата.
+Запускается один раз — в момент <code>new</code>. Всё, что он получил в параметрах,
+раскладывает по полям — поэтому методы ниже могут драйвером пользоваться.</p>
+
+<h2>static — «принадлежит классу, а не объекту»</h2>
+<pre><code>var page = new LoginPage(driver);
+page.Open();                    <i>// обычный метод — у объекта</i>
+
+TestUser.CreateDefault();       <i>// static — у самого класса, new не нужен</i>
+Console.WriteLine("x");         <i>// Console — static-класс, объектов не создаём</i></code></pre>
+
+<p>Видишь вызов без <code>new</code> и с большой буквы — это <code>static</code>.</p>
+
+<h2>Цепочки вызовов</h2>
+<pre><code>page.Open().EnterLogin("admin").Submit();
+// читаем слева направо: каждый метод вернул page (return this),
+// и у него же вызван следующий метод</code></pre>
+
+<h2>Практика (3 минуты)</h2>
+<p>Открой <code>TestExample/Tests/LoginTests.cs</code> и найди:</p>
+<ol>
+    <li>два поля класса</li>
+    <li>конструктор — что он кладёт в поля?</li>
+    <li>где в файле создаётся объект (<code>new</code>) и какого класса?</li>
+    <li>есть ли там свойства? (подсказка: ищи <code>{ get;</code>)</li>
+</ol>
+<details>
+    <summary>Показать ответы</summary>
+    <ol>
+        <li><code>_driver</code> и <code>_loginPage</code> — private readonly, над конструктором</li>
+        <li>Создаёт <code>FakeDriver</code> и <code>LoginPage</code>, кладёт в эти поля — чтобы тесты их видели</li>
+        <li>В конструкторе: <code>new FakeDriver()</code> и <code>new LoginPage(_driver)</code></li>
+        <li>Свойств нет — только поля и методы-тесты</li>
+    </ol>
+</details>
+
+<h2>Проверь себя</h2>
+<div class="quiz">
+
+    <div class="quiz-q">
+        <p class="q-text">Чем объект отличается от класса?</p>
+        <ul>
+            <li data-ok="false">класс — это экземпляр, объект — это шаблон класса</li>
+            <li data-ok="true">класс — шаблон, объект — экземпляр со своими данными</li>
+            <li data-ok="false">ничем не отличаются — это два имени одного</li>
+        </ul>
+        <p class="feedback" data-good="Да: один класс LoginPage — много объектов с разным состоянием." data-bad="Наоборот: класс — чертёж, объект — изделие по нему. new создаёт объект из класса."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Как распознать конструктор в коде класса?</p>
+        <ul>
+            <li data-ok="true">имя совпадает с именем класса, нет типа возврата</li>
+            <li data-ok="false">метод со словом <code>static</code> в объявлении</li>
+            <li data-ok="false">метод с именем <code>Constructor</code> или <code>Create</code></li>
+        </ul>
+        <p class="feedback" data-good="Верно. LoginPage(FakeDriver driver) — имя = класс, типа нет." data-bad="Конструктор называется как класс и не имеет возвращаемого типа — даже void не пишут."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>private readonly FakeDriver _driver;</code> внутри класса, но вне методов — это…</p>
+        <ul>
+            <li data-ok="false">свойство класса</li>
+            <li data-ok="true">поле класса</li>
+            <li data-ok="false">локальная переменная</li>
+        </ul>
+        <p class="feedback" data-good="Да. Поле — внутренняя память объекта, живёт вместе с ним." data-bad="Это поле: объявлено на уровне класса и у него нет { get; }. Локальные переменные живут только внутри методов."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text"><code>TestUser.CreateDefault()</code> вызван без <code>new</code> и без объекта. Значит метод…</p>
+        <ul>
+            <li data-ok="false">приватный</li>
+            <li data-ok="true">статический (static)</li>
+            <li data-ok="false">асинхронный (async)</li>
+        </ul>
+        <p class="feedback" data-good="Да. static вызывается через имя класса: Класс.Метод()." data-bad="Признак static: вызов через имя класса без создания объекта. private про видимость, async про ожидание — не про это."></p>
+    </div>
+
+</div>
+
+<div class="win">
+    <p class="label">Твой выигрыш</p>
+    <p>Теперь файл <code>LoginPage.cs</code> читается как устройство:
+    поля — память, конструктор — сборка, методы — кнопки управления.
+    Эта же структура повторяется в любом Page Object реального проекта.</p>
+</div>
+
+<p>Живой пример: <code>cd LearningCSharp</code>, <code>dotnet run</code>, урок 4.
+Первоисточник: <a href="https://metanit.com/sharp/tutorial/">Metanit — руководство по C#</a>, раздел «Классы, структуры и пространства имён».</p>
+
+<nav class="lesson-nav">
+    <a href="0003-metody.html">← Урок 3. Методы</a>
+    <a href="0005-usloviya.html">Урок 5. Условия и логика →</a>
+</nav>
+
+<div class="teacher-note">
+    Непонятно? Спроси Devin: «почему _driver readonly, а CurrentUrl можно менять»
+    или «покажи, сколько объектов создаётся при прогоне тестов».
+</div>
+
+</main>
+</body>
+</html>

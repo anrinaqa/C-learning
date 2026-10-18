@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — Расшифровщик синтаксиса C#</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Шпаргалка · держи под рукой при ревью</p>
+<h1>Расшифровщик синтаксиса C#</h1>
+<p class="subtitle">Конструкции, которые выглядят пугающе, но читаются просто.</p>
+
+<h2>Операторы</h2>
+<table class="ref">
+<tr><th>Запись</th><th>Читается как</th><th>Пример</th></tr>
+<tr><td><code>=</code></td><td>присвоить</td><td><code>x = 5;</code> — «положи 5 в x»</td></tr>
+<tr><td><code>==</code></td><td>сравнить на равенство</td><td><code>if (x == 5)</code> — «если x равен 5»</td></tr>
+<tr><td><code>!=</code></td><td>не равно</td><td><code>if (x != null)</code></td></tr>
+<tr><td><code>&amp;&amp;</code></td><td>И (оба условия)</td><td><code>if (a &amp;&amp; b)</code></td></tr>
+<tr><td><code>||</code></td><td>ИЛИ (хотя бы одно)</td><td><code>if (a || b)</code></td></tr>
+<tr><td><code>!</code></td><td>НЕ (переворот)</td><td><code>if (!visible)</code> — «если НЕ виден»</td></tr>
+<tr><td><code>?</code> <code>:</code></td><td>мини-if</td><td><code>x == 5 ? "ok" : "fail"</code></td></tr>
+</table>
+
+<h2>Null-безопасность</h2>
+<table class="ref">
+<tr><th>Запись</th><th>Читается как</th></tr>
+<tr><td><code>obj?.Prop</code></td><td>«если obj не null — возьми Prop, иначе результат null»</td></tr>
+<tr><td><code>a ?? b</code></td><td>«если a не null — возьми a, иначе b»</td></tr>
+<tr><td><code>string?</code></td><td>«строка, которая может быть null»</td></tr>
+<tr><td><code>x!</code></td><td>«уверяю, тут не null» (опасно — может упасть)</td></tr>
+</table>
+
+<h2>Объявления</h2>
+<table class="ref">
+<tr><th>Запись</th><th>Читается как</th></tr>
+<tr><td><code>var x = ...</code></td><td>переменная, тип понятен из правой части</td></tr>
+<tr><td><code>List&lt;string&gt;</code></td><td>список строк; в уголках — «из чего состоит»</td></tr>
+<tr><td><code>string[]</code></td><td>массив строк (фиксированная длина)</td></tr>
+<tr><td><code>Task&lt;bool&gt;</code></td><td>асинхронная операция, вернёт bool</td></tr>
+<tr><td><code>const int X = 5</code></td><td>константа — никогда не меняется</td></tr>
+<tr><td><code>readonly</code></td><td>задаётся один раз в конструкторе</td></tr>
+</table>
+
+<h2>Странные стрелки и скобки</h2>
+<table class="ref">
+<tr><th>Запись</th><th>Читается как</th></tr>
+<tr><td><code>x =&gt; x + 1</code></td><td>мини-функция: «x преврати в x+1» (лямбда)</td></tr>
+<tr><td><code>int F() =&gt; 5;</code></td><td>метод из одной строки: <code>{ return 5; }</code></td></tr>
+<tr><td><code>[Fact]</code></td><td>атрибут-ярлык: «это тест, запусти меня»</td></tr>
+<tr><td><code>$"текст {x}"</code></td><td>строка с подстановкой переменных</td></tr>
+<tr><td><code>using var x</code></td><td>«по выходу из метода — убери за собой»</td></tr>
+</table>
+
+<h2>Частые слова в сигнатурах</h2>
+<table class="ref">
+<tr><th>Слово</th><th>Значение</th></tr>
+<tr><td><code>void</code></td><td>метод ничего не возвращает</td></tr>
+<tr><td><code>static</code></td><td>принадлежит классу, а не объекту; зовётся без <code>new</code></td></tr>
+<tr><td><code>async</code></td><td>метод асинхронный; внутри почти наверняка <code>await</code></td></tr>
+<tr><td><code>return this</code></td><td>«верни себя же» — даёт цепочки <code>page.Open().Login()</code></td></tr>
+</table>
+
+<nav class="lesson-nav">
+    <a href="../lessons/0001-anatomiya-fayla-csharp.html">← К урокам</a>
+    <a href="chtenie-oshibok.html">Шпаргалка: чтение ошибок →</a>
+</nav>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — Как читать упавший тест</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Шпаргалка · самая востребованная в твоей работе</p>
+<h1>Как читать упавший тест</h1>
+<p class="subtitle">Stack trace — это не хаос, а карта. Читается сверху вниз.</p>
+
+<h2>Анатомия падения</h2>
+<pre><code>Failed Login_VariousCredentials(login: "admin", password: "x")
+  Assert.Equal() Failure          <i>// КТО упал: проверка Assert.Equal</i>
+  Expected: True                  <i>// что ОЖИДАЛИ</i>
+  Actual:   False                 <i>// что ПОЛУЧИЛИ</i>
+     at TestExample.Tests.LoginTests.Login_VariousCredentials(...)
+     in Tests\LoginTests.cs:<b>line 75</b>   <i>// ГДЕ: файл + строка — смотри сюда!</i></code></pre>
+
+<h2>Алгоритм за 30 секунд</h2>
+<ol>
+    <li><b>Какой тест?</b> — имя в первой строке + параметры из <code>InlineData</code></li>
+    <li><b>Тип ошибки?</b> — <code>Assert.*Exception</code> (тест отработал, но проверка не прошла) или <code>NullReference</code>/<code>Timeout</code> (код упал сам)</li>
+    <li><b>Expected vs Actual</b> — что сравнивалось и на чём разошлось</li>
+    <li><b>Первая строка СВОЕГО кода</b> — в stack trace ищи первую строку НЕ из <code>System.*</code> и не из NuGet-пакетов. Там <code>файл:line</code></li>
+</ol>
+
+<h2>Типы ошибок в автотестах</h2>
+<table class="ref">
+<tr><th>Ошибка</th><th>Что случилось</th><th>Куда смотреть</th></tr>
+<tr><td><code>Assert.Equal/True Failure</code></td><td>код отработал, результат не тот</td><td>ожидаемое значение, тестовые данные</td></tr>
+<tr><td><code>NullReferenceException</code></td><td>обратились к <code>null</code></td><td>что могло не вернуться/не создаться</td></tr>
+<tr><td><code>NoSuchElementException</code></td><td>Selenium не нашёл элемент</td><td>селектор! изменилась вёрстка?</td></tr>
+<tr><td><code>TimeoutException</code></td><td>не дождались элемент/страницу</td><td>мало времени ожидания или реально нет элемента</td></tr>
+<tr><td><code>StaleElementReference</code></td><td>элемент «протух» — страница обновилась</td><td>нужно найти элемент заново</td></tr>
+</table>
+
+<h2>Топ ошибок в ИИ-сгенерированном коде</h2>
+<table class="ref">
+<tr><th>Симптом</th><th>Проверь</th></tr>
+<tr><td>тест «зелёный», но ничего не проверяет</td><td>есть ли <code>Assert</code> вообще</td></tr>
+<tr><td>тест flaky (то падает, то нет)</td><td>забыт <code>await</code> у <code>async</code>-вызова; жёсткий <code>Thread.Sleep</code></td></tr>
+<tr><td>«Expected: X, Actual: Y» наоборот</td><td>перепутаны аргументы <code>Assert.Equal(expected, actual)</code></td></tr>
+<tr><td>элемент не находится</td><td>селектор скопирован/угады ИИ, а не взят со страницы</td></tr>
+<tr><td>тест зависит от другого теста</td><td>тесты должны быть независимы — ищи shared state</td></tr>
+</table>
+
+<nav class="lesson-nav">
+    <a href="sintaksis-decoder.html">← Расшифровщик синтаксиса</a>
+    <a href="../lessons/0001-anatomiya-fayla-csharp.html">К урокам →</a>
+</nav>
+
+</main>
+</body>
+</html>

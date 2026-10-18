@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 1 — Анатомия файла C#</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Урок 1 · ~10 минут</p>
+<h1>Анатомия файла C#</h1>
+<p class="subtitle">Навык: открыть любой <code>.cs</code> файл и за 10 секунд увидеть его скелет.</p>
+
+<h2>Четыре слоя каждого файла</h2>
+<p>Код C# всегда собран одинаково, как матрёшка — из внешних слоёв к внутренним:</p>
+
+<pre><code><b>using</b> OpenQA.Selenium;        <i>// 1. «подключаю библиотеку Selenium»</i>
+
+<b>namespace</b> MyTests.Pages;      <i>// 2. «логическая папка» файла</i>
+
+<b>public class</b> LoginPage        <i>// 3. класс — контейнер для кода</i>
+{
+    <b>public void</b> EnterLogin()   <i>// 4. метод — именованный блок действий</i>
+    {
+        driver.Type("#login");  <i>// команда — всегда заканчивается ;</i>
+    }
+}</code></pre>
+
+<p>Когда открываешь незнакомый файл, не читай его подряд — сначала найди глазами эти четыре слоя.
+<code>using</code> скажет, с чем файл работает (Selenium? база данных? HTTP?),
+а имена класса и методов — что он делает.</p>
+
+<h2>Три знака препинания, которые правят всем</h2>
+
+<table class="ref">
+<tr><th>Знак</th><th>Что означает</th></tr>
+<tr><td><code>;</code></td><td>конец команды. Нет точки с запятой — код не скомпилируется</td></tr>
+<tr><td><code>{ }</code></td><td>границы блока. Всегда пара: открыла — закрыла. Вложенность видна по отступам</td></tr>
+<tr><td><code>.</code></td><td>«возьми то, что внутри»: <code>driver.Type(...)</code> — у объекта <code>driver</code> вызвали метод <code>Type</code></td></tr>
+</table>
+
+<h2>Практика (2 минуты)</h2>
+<p>Открой файл <code>TestExample/Pages/LoginPage.cs</code> и найди в нём:</p>
+<ol>
+    <li>строку <code>namespace</code> — в какой «папке» живёт класс?</li>
+    <li>селекторы <code>LoginField</code>, <code>SubmitButton</code> — почему они вынесены наверх?</li>
+    <li>все пары <code>{ }</code> метода <code>Submit()</code></li>
+</ol>
+<details>
+    <summary>Показать ответы</summary>
+    <ol>
+        <li><code>TestExample.Pages</code> — повторяет структуру папок проекта</li>
+        <li>Чтобы при изменении вёрстки править одно место, а не весь файл</li>
+        <li>Две пары: скобки тела метода <code>Submit()</code> и скобки класса снаружи</li>
+    </ol>
+</details>
+
+<h2>Проверь себя</h2>
+<div class="quiz">
+
+    <div class="quiz-q">
+        <p class="q-text">Что означает строка <code>using OpenQA.Selenium;</code>?</p>
+        <ul>
+            <li data-ok="false">файл создаёт объект браузера</li>
+            <li data-ok="true">файл подключает библиотеку Selenium</li>
+            <li data-ok="false">файл объявляет класс Selenium</li>
+        </ul>
+        <p class="feedback" data-good="Да. using — это про доступ к чужому коду, не про создание чего-либо." data-bad="Не совсем: using только подключает библиотеку. Создание объектов происходит позже, через new."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Чем заканчивается тело метода?</p>
+        <ul>
+            <li data-ok="false">точкой с запятой <code>;</code></li>
+            <li data-ok="true">закрывающей скобкой <code>}</code></li>
+            <li data-ok="false">концом файла <code>EOF</code></li>
+        </ul>
+        <p class="feedback" data-good="Верно. ; заканчивает команды внутри метода, а } — сам метод." data-bad="Путаешь два знака: ; заканчивает команду, а } закрывает блок — например, метод."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">В коде <code>page.EnterLogin("admin")</code> что означает точка?</p>
+        <ul>
+            <li data-ok="false">присваивание значения <code>"admin"</code> объекту <code>page</code></li>
+            <li data-ok="true">у объекта <code>page</code> вызывается метод <code>EnterLogin</code></li>
+            <li data-ok="false">соединение двух частей строки в одну длинную</li>
+        </ul>
+        <p class="feedback" data-good="Да. Читается слева направо: «у page сделай EnterLogin»." data-bad="Точка — это доступ внутрь объекта. Слева объект, справа его метод."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Какая строка НЕ скомпилируется?</p>
+        <ul>
+            <li data-ok="true"><code>int count = 5</code></li>
+            <li data-ok="false"><code>int count = 5;</code></li>
+            <li data-ok="false"><code>// int count = 5</code></li>
+        </ul>
+        <p class="feedback" data-good="Точно — без ; компилятор не поймёт, где конец команды. А третья строка — комментарий, он вообще игнорируется." data-bad="Первая строка не скомпилируется: без ; компилятор не поймёт конец команды. Строка с // — комментарий, она игнорируется."></p>
+    </div>
+
+</div>
+
+<div class="win">
+    <p class="label">Твой выигрыш</p>
+    <p>Теперь любой файл C# — не «стена текста», а конструктор из четырёх слоёв.
+    Этот приём работает и на файлах по 300 строк: сначала слои, потом детали.</p>
+</div>
+
+<p>Проверь себя на живом коде: в терминале выполни <code>cd LearningCSharp</code>, затем <code>dotnet run</code> и выбери урок 1.
+(В PowerShell нельзя склеивать команды через <code>&amp;&amp;</code> — пиши их по одной.)
+Рекомендуемый первоисточник: <a href="https://learn.microsoft.com/ru-ru/dotnet/csharp/tour-of-csharp/">«Тур по C#» на Microsoft Learn</a> (раздел «Структура программы»).</p>
+
+<nav class="lesson-nav">
+    <span></span>
+    <a href="0002-peremennye-i-tipy.html">Урок 2. Переменные и типы →</a>
+</nav>
+
+<div class="teacher-note">
+    Что-то непонятно? Спроси Devin прямо в чате — например: «объясни, чем namespace
+    отличается от папки» или «разбери построчно LoginPage.cs».
+</div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Практика — Уроки 1–4: детектив по коду</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Практика · ~20 минут · уроки 1–4</p>
+<h1>Детектив по коду</h1>
+<p class="subtitle">Всё задание — на реальных файлах проекта <code>TestExample</code> и <code>LearningCSharp</code>.
+Ничего писать не нужно — только находить и объяснять. Ответы под спойлерами: сначала ищи сама, потом сверяйся.</p>
+
+<h2>Блок А. Анатомия (урок 1)</h2>
+<p>Открой <code>TestExample/FakeDriver.cs</code>:</p>
+<ol>
+    <li>На какой строке <code>namespace</code>? Совпадает ли он с папкой файла?</li>
+    <li>На каких строках открывается и закрывается класс <code>FakeDriver</code>?</li>
+    <li>Сколько в классе методов? Перечисли их имена.</li>
+    <li>Найди метод с самым длинным телом — между какими строками он живёт?</li>
+</ol>
+<details><summary>Показать ответы</summary>
+<ol>
+    <li>Строка 12: <code>namespace TestExample;</code> — файл в корне проекта, папки нет, namespace без уточнений</li>
+    <li>Открывается на 15 (<code>{</code> после <code>public class FakeDriver</code>), закрывается на 57</li>
+    <li>Пять: <code>GoTo</code>, <code>Type</code>, <code>Click</code>, <code>IsVisible</code>, <code>GetText</code>. <code>CurrentUrl</code> — свойство, не метод</li>
+    <li><code>Click</code> — строки 40–52</li>
+</ol>
+</details>
+
+<h2>Блок Б. Типы (урок 2)</h2>
+<p>Определи тип каждого значения — не глядя в файлы, по виду значения:</p>
+<ol>
+    <li><code>"#submit"</code></li>
+    <li><code>200</code></li>
+    <li><code>true</code></li>
+    <li><code>"true"</code></li>
+    <li><code>null</code></li>
+    <li><code>'/'</code></li>
+</ol>
+<details><summary>Показать ответы</summary>
+<ol>
+    <li><code>string</code> — двойные кавычки</li>
+    <li><code>int</code></li>
+    <li><code>bool</code></li>
+    <li><code>string</code> — кавычки делают текстом!</li>
+    <li>«ничего» — у null нет типа значения, это отсутствие значения</li>
+    <li><code>char</code> — один символ в одинарных кавычках</li>
+</ol>
+</details>
+
+<h2>Блок В. Методы (урок 3)</h2>
+<p>В <code>FakeDriver.cs</code> для каждой сигнатуры назови: вход / выход / видимость.</p>
+<ol>
+    <li><code>public void GoTo(string url)</code></li>
+    <li><code>public string? GetText(string selector)</code></li>
+    <li>Найди два метода, записанных через <code>=></code>. Чем они отличаются от обычных?</li>
+    <li>В <code>Click</code> есть вызов <code>_fields.GetValueOrDefault("#login")</code> — сколько аргументов у этого вызова?</li>
+</ol>
+<details><summary>Показать ответы</summary>
+<ol>
+    <li>Вход: строка url · Выход: void (ничего) · public</li>
+    <li>Вход: селектор · Выход: строка ИЛИ null · public</li>
+    <li><code>IsVisible</code> и <code>GetText</code> (строки 54, 56) — тело из одного выражения, <code>return</code> не пишется</li>
+    <li>Один — строка <code>"#login"</code></li>
+</ol>
+</details>
+
+<h2>Блок Г. Классы (урок 4)</h2>
+<p>Открой <code>LoginTests.cs</code> и <code>LoginPage.cs</code>:</p>
+<ol>
+    <li>В <code>LoginTests</code>: найди поля и конструктор. Что конструктор делает с полями?</li>
+    <li>Сколько объектов создаётся через <code>new</code> в конструкторе?</li>
+    <li>В <code>LoginPage</code>: почему <code>LoginField</code> — константа, а не поле <code>readonly</code>?</li>
+    <li>Метод <code>Submit()</code> возвращает <code>LoginPage</code> — зачем, если он «просто кликает»?</li>
+</ol>
+<details><summary>Показать ответы</summary>
+<ol>
+    <li>Поля <code>_driver</code>, <code>_loginPage</code>; конструктор создаёт оба объекта и кладёт в поля — тесты ими пользуются</li>
+    <li>Два: <code>new FakeDriver()</code> и <code>new LoginPage(_driver)</code></li>
+    <li>Значение известно сразу и не зависит от объекта — <code>const</code> зашит намертво; <code>readonly</code> задаётся в конструкторе каждому объекту</li>
+    <li>Чтобы тест мог писать цепочкой <code>.Open().EnterLogin().Submit()</code> — <code>return this</code></li>
+</ol>
+</details>
+
+<h2>Блок Д. Найди ошибку</h2>
+<p>ИИ сгенерировал код. В каждом фрагменте — одна ошибка. Найди её, не подглядывая:</p>
+
+<p><b>Фрагмент 1</b></p>
+<pre><code>public void EnterLogin(string login)
+{
+    _driver.Type(LoginField, login)
+    return this;
+}</code></pre>
+<details><summary>Ответ</summary>
+<p>Нет <code>;</code> после вызова <code>Type(...)</code>. Код не скомпилируется.</p>
+</details>
+
+<p><b>Фрагмент 2</b></p>
+<pre><code>private const int SubmitButton = "#submit";
+_driver.Click(SubmitButton);</code></pre>
+<details><summary>Ответ</summary>
+<p>Тип <code>int</code>, а значение — строка <code>"#submit"</code>. Должно быть <code>string</code>.</p>
+</details>
+
+<p><b>Фрагмент 3</b></p>
+<pre><code>public LoginPage EnterPassword(string password)
+{
+    _driver.Type(PasswordField, password);
+}
+[Fact]
+public void Test() { page.EnterPassword("x").Submit(); }</code></pre>
+<details><summary>Ответ</summary>
+<p>Метод объявлен с возвратом <code>LoginPage</code>, но <code>return this;</code> забыли —
+цепочка <code>.Submit()</code> после него не скомпилируется. Классическая недоработка ИИ.</p>
+</details>
+
+<h2>Финальный вопрос на понимание</h2>
+<p>Объясни своими словами (можно вслух или мне в чат): почему в тестах пишут
+<code>page.EnterLogin("admin")</code>, а не <code>driver.Type("#login", "admin")</code>?
+Что даёт Page Object?</p>
+<details><summary>Что хочется услышать</summary>
+<p>Тест не знает про селекторы и вёрстку — он описывает шаги пользователя.
+Селектор живёт в одном месте (LoginPage); поменялась вёрстка — правим одну строку,
+а не все тесты. Плюс тест читается как ручной ТК.</p>
+</details>
+
+<div class="win">
+    <p class="label">Итог</p>
+    <p>Если блоки А–В дались легко — структуру файлов ты читаешь.
+    Блоки Г и Д — зона роста: именно такие ошибки надо будет ловить в коде от ИИ.</p>
+</div>
+
+<nav class="lesson-nav">
+    <a href="../lessons/0004-klassy-i-obekty.html">← Урок 4. Классы и объекты</a>
+    <a href="../lessons/0005-usloviya.html">Урок 5. Условия и логика →</a>
+</nav>
+
+<div class="teacher-note">
+    Застряла на задании — спроси Devin: «объясни блок Г, вопрос 3».
+    Хочешь — проведу разбор любого блока голосом: «разбери мои ответы на блок Б».
+</div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 2 — Переменные и типы</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/menu.js" defer></script>
+</head>
+<body>
+<main>
+
+<p class="lesson-meta">Урок 2 · ~10 минут</p>
+<h1>Переменные и типы</h1>
+<p class="subtitle">Навык: прочитать любую строку <code>тип имя = значение;</code> и понять, что в ней лежит.</p>
+
+<h2>Переменная = именованная коробка</h2>
+<p>Каждая строка объявления читается слева направо:</p>
+
+<pre><code>   тип     имя       значение
+    │       │            │
+  <b>string</b>  userName = "admin";</code></pre>
+
+<p>Тип в C# фиксируется навсегда: в коробку <code>int</code> нельзя позже положить строку.
+Это первая защита от ошибок — компилятор отловит путаницу ещё до запуска теста.</p>
+
+<h2>Пять типов, которые закрывают 95% кода</h2>
+<table class="ref">
+<tr><th>Тип</th><th>Что хранит</th><th>Как пишется значение</th></tr>
+<tr><td><code>string</code></td><td>текст</td><td><code>"admin"</code> — двойные кавычки</td></tr>
+<tr><td><code>int</code></td><td>целые числа</td><td><code>42</code>, <code>-1</code></td></tr>
+<tr><td><code>double</code></td><td>дробные числа</td><td><code>19.99</code></td></tr>
+<tr><td><code>bool</code></td><td>истина/ложь</td><td><code>true</code> или <code>false</code> — без кавычек!</td></tr>
+<tr><td><code>char</code></td><td>один символ</td><td><code>'A'</code> — одинарные кавычки</td></tr>
+</table>
+
+<p>Классическая ошибка: <code>"true"</code> — это строка из четырёх букв, а не bool.
+<code>bool ok = "true";</code> — не скомпилируется.</p>
+
+<h2>Три модификатора из урока с LoginPage</h2>
+<p>Вспомни строки из <code>LoginPage.cs</code> — теперь их можно прочитать полностью:</p>
+
+<pre><code><b>private const string</b> LoginField = "#login";   <i>// видно внутри класса, не меняется никогда</i>
+<b>private readonly FakeDriver</b> _driver;          <i>// видно внутри класса, задаётся 1 раз в конструкторе</i>
+<b>var</b> page = new LoginPage(driver);             <i>// var — «тип понятен из правой части»</i></code></pre>
+
+<ul>
+    <li><code>const</code> — константа: значение зашито навсегда</li>
+    <li><code>readonly</code> — можно задать один раз, в конструкторе</li>
+    <li><code>var</code> — не «без типа», а «компилятор, выведи сам»: <code>var x = 5;</code> — это int</li>
+</ul>
+
+<h2>null — «ничего нет»</h2>
+<p>Особое значение: коробка пустая. <code>string? name = null;</code> — вопросительный знак
+честно предупреждает «тут может быть пусто».</p>
+<p>Почему это важно тебе: <code>NullReferenceException</code> — самая частая причина падения
+автотестов. Элемент не нашёлся → вернулся <code>null</code> → код обратился к нему → падение.</p>
+
+<h2>Строки с подстановкой</h2>
+<pre><code>int timeout = 30;
+string msg = <b>$</b>"Таймаут {timeout} сек";   <i>// $ разрешает {переменные} внутри текста</i></code></pre>
+
+<h2>Практика (2 минуты)</h2>
+<p>Открой <code>TestExample/FakeDriver.cs</code> и ответь:</p>
+<ol>
+    <li>Какого типа поле <code>_fields</code>?</li>
+    <li>Что означает <code>string?</code> у свойства <code>CurrentUrl</code>?</li>
+    <li>Найди переменную <code>ok</code> в методе <code>Click</code> — какого она типа и откуда берётся?</li>
+</ol>
+<details>
+    <summary>Показать ответы</summary>
+    <ol>
+        <li><code>Dictionary&lt;string, string&gt;</code> — словарь «строка → строка» (селектор → текст)</li>
+        <li>Строка, которая может быть <code>null</code> — пока страница не открыта, адреса нет</li>
+        <li><code>bool</code> — результат сравнения логина и пароля с ожидаемыми</li>
+    </ol>
+</details>
+
+<h2>Проверь себя</h2>
+<div class="quiz">
+
+    <div class="quiz-q">
+        <p class="q-text">Что означает <code>var timeout = 30;</code>?</p>
+        <ul>
+            <li data-ok="false">переменная может хранить любые типы данных</li>
+            <li data-ok="true">переменная типа <code>int</code>, компилятор вывел тип сам</li>
+            <li data-ok="false">переменная без типа, тип определится при работе</li>
+        </ul>
+        <p class="feedback" data-good="Да. var — это «тип очевиден справа», а не «любой тип»." data-bad="Частая ловушка: var не значит «любой тип». Компилятор смотрит на 30 и фиксирует int навсегда."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Какая строка НЕ скомпилируется?</p>
+        <ul>
+            <li data-ok="false"><code>bool ok = true;</code></li>
+            <li data-ok="true"><code>bool ok = "true";</code></li>
+            <li data-ok="false"><code>int ok = 1;</code></li>
+        </ul>
+        <p class="feedback" data-good="Верно: в кавычках — строка, а не bool." data-bad="Кавычки делают значение строкой. \"true\" ≠ true — в bool нельзя положить текст."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Чем <code>const</code> отличается от <code>readonly</code>?</p>
+        <ul>
+            <li data-ok="false">ничем, это просто синонимы в языке C#</li>
+            <li data-ok="true"><code>const</code> задан навсегда, <code>readonly</code> задаётся в конструкторе</li>
+            <li data-ok="false"><code>const</code> для чисел, <code>readonly</code> для строк и объектов</li>
+        </ul>
+        <p class="feedback" data-good="Да: const зашит в коде, readonly получает значение при создании объекта." data-bad="Разница в моменте установки: const — сразу и навсегда, readonly — один раз в конструкторе."></p>
+    </div>
+
+    <div class="quiz-q">
+        <p class="q-text">Тест упал с <code>NullReferenceException</code>. Что это значит?</p>
+        <ul>
+            <li data-ok="true">код обратился к переменной, в которой <code>null</code></li>
+            <li data-ok="false">код сравнил два значения, и они не совпали</li>
+            <li data-ok="false">код не смог найти переменную по её имени</li>
+        </ul>
+        <p class="feedback" data-good="Да. Типичный сценарий: элемент не нашёлся → null → обращение к нему → падение." data-bad="NullReference — это про пустую переменную. «Не совпали значения» — это Assert-ошибка, а «не нашёл имя» — ошибка компиляции."></p>
+    </div>
+
+</div>
+
+<div class="win">
+    <p class="label">Твой выигрыш</p>
+    <p>Теперь строки вида <code>private const string SubmitButton = "#submit";</code>
+    читаются полностью: видимость + изменяемость + тип + имя + значение.
+    Это 80% всех объявлений в тестовом проекте.</p>
+</div>
+
+<p>Живой пример: <code>cd LearningCSharp</code>, <code>dotnet run</code>, урок 2.
+Первоисточник: <a href="https://metanit.com/sharp/tutorial/2.5.aspx">Metanit — переменные и константы</a>.</p>
+
+<nav class="lesson-nav">
+    <a href="0001-anatomiya-fayla-csharp.html">← Урок 1. Анатомия файла</a>
+    <a href="../reference/sintaksis-decoder.html">Шпаргалка: синтаксис →</a>
+</nav>
+
+<div class="teacher-note">
+    Непонятно? Спроси Devin: «почему var не равен dynamic», «покажи, где в
+    LoginTests.cs какие типы» — разберу на реальном коде.
+</div>
+
+</main>
+</body>
+</html>
